@@ -12,6 +12,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false # Important: prevents conflict with PAT
 
       - name: Prepare Clean Code
         run: |
@@ -32,5 +33,6 @@ jobs:
           for i in $(seq -f "%03g" 1 $COUNT); do
             REPO_NAME="${PREFIX}-${i}"
             echo "Updating ${REPO_NAME}..."
-            git push "https://${PAT}@github.com/${OWNER}/${REPO_NAME}.git" HEAD:main --force
+            # Use x-access-token format for more reliable PAT authentication
+            git push "https://x-access-token:${PAT}@github.com/${OWNER}/${REPO_NAME}.git" HEAD:main --force
           done
